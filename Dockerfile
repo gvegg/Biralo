@@ -5,11 +5,10 @@ RUN apt update && \
     apt install -y curl wget python3 ca-certificates && \
     apt clean
 
-# Install sshx
-RUN curl -sSf https://sshx.io/get | sh
-
-# Move sshx to a directory in PATH
-RUN mv sshx /usr/local/bin/sshx && chmod +x /usr/local/bin/sshx
+# Install sshx using the official installation script
+RUN curl -sSf https://sshx.io/get | sh && \
+    mv sshx /usr/local/bin/sshx && \
+    chmod +x /usr/local/bin/sshx
 
 # Create a dummy web server directory
 WORKDIR /app
