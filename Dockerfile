@@ -1,20 +1,22 @@
 FROM ubuntu:22.04
 
-# Install required packages
+# Install dependencies
 RUN apt update && \
-    apt install -y curl wget unzip git python3 ca-certificates && \
+    apt install -y curl wget python3 ca-certificates && \
     apt clean
 
-# Corrected SSHX binary install (v0.4.2)
-RUN curl -L https://github.com/sshxio/sshx/releases/download/v0.4.2/sshx-linux-amd64 -o /usr/local/bin/sshx && \
-    chmod +x /usr/local/bin/sshx
+# Install sshx
+RUN curl -sSf https://sshx.io/get | sh
 
-# Dummy web server to keep Render container alive
+# Move sshx to a directory in PATH
+RUN mv sshx /usr/local/bin/sshx && chmod +x /usr/local/bin/sshx
+
+# Create a dummy web server directory
 WORKDIR /app
 RUN echo "SSHX session running..." > index.html
 
+# Expose port 8080 to keep the container alive
 EXPOSE 8080
 
-# Run dummy server and SSHX together
-CMD python3 -m http.server 8080 & /usr/local/bin/sshx serve --once
-
+# Start a dummy HTTP server and launch sshx
+CMD python3 -m http.server 8080 & sshx serve --once
