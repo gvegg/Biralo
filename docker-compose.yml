@@ -1,5 +1,11 @@
+version: "3.9"
+
 services:
-  web:
+  minecraft:
     build: .
     ports:
-      - "25565:25565"
+      - "25565:25565"  # Проброс порта
+    tty: true           # Чтобы контейнер не завершался сразу
+    stdin_open: true
+    environment:
+      - EULA=true       # Если требуется согласие с EULA
